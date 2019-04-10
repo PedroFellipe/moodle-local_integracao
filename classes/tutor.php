@@ -264,17 +264,17 @@ class local_wsintegracao_tutor extends wsintegracao_base {
                 }
             }
 
+            // Prepara o array de retorno.
+            $returndata['id'] = $userid;
+            $returndata['status'] = 'success';
+            $returndata['message'] = 'Tutor desvinculado do grupo com sucesso';
+
             // Persiste as operacoes em caso de sucesso.
             $transaction->allow_commit();
 
         } catch (Exception $e) {
             $transaction->rollback($e);
         }
-
-        // Prepara o array de retorno.
-        $returndata['id'] = $userid;
-        $returndata['status'] = 'success';
-        $returndata['message'] = 'Tutor desvinculado do grupo com sucesso';
 
         return $returndata;
     }
