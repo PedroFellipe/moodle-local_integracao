@@ -96,4 +96,9 @@ if ($hassiteconfig) {
         new admin_setting_configselect('local_integracao/tutor_distancia', 'Tutor à Distância',
             '', '1', $papeis)
     );
+
+    $settings->add(
+        new admin_setting_configselect('local_integracao/tutor_inativo', 'Tutor Inativo',
+            '', '1', $papeis)
+    );
 }

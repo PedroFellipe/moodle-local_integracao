@@ -244,7 +244,24 @@ class local_wsintegracao_tutor extends wsintegracao_base {
             $tutorcourse = $DB->get_record('int_tutor_group', array('courseid' => $courseid, 'pes_id' => $tutor->pes_id), '*');
 
             if (!$tutorcourse) {
-                self::unenrol_user_in_moodle_course($userid, $courseid);
+                // Pega o centexto do curso.
+                $context = context_course::instance($courseid);
+
+                // Pega as configuraçoes do plugin.
+                $config = get_config('local_integracao');
+
+                //Pega o Id de tutor inativo e atribui ao tutor no curso
+                $roleid = $config->tutor_inativo;
+
+                // Pega a instancia de mdl_role_assignments de acordo com o usuario e o contexto do curso.
+                $roleassignment = $DB->get_record('role_assignments', array('userid' => $userid, 'contextid' => $context->id));
+
+                if ($roleassignment) {
+                    // Atualiza a role do tutor.
+                    $roleassignment->roleid = $roleid;
+                    $DB->update_record('role_assignments', $roleassignment);
+
+                }
             }
 
             // Persiste as operacoes em caso de sucesso.
