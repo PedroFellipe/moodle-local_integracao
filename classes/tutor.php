@@ -47,6 +47,7 @@ class local_wsintegracao_tutor extends wsintegracao_base {
             // Inicia a transacao, qualquer erro que aconteca o rollback sera executado.
             $transaction = $DB->start_delegated_transaction();
 
+
             // Verifica se o tutor pode ser vinculado ao grupo.
             $data = self::get_enrol_tutor_group_validation_rules($tutor);
 
@@ -56,6 +57,13 @@ class local_wsintegracao_tutor extends wsintegracao_base {
             // Vincula o tutor a um curso no moodle.
             $tutorpresencialrole = get_config('local_integracao')->tutor_presencial;
             $tutordistanciarole = get_config('local_integracao')->tutor_distancia;
+            $tutorinativorole = get_config('local_integracao')->tutor_inativo;
+
+            //seção para retirar papel de inativo do tutor
+            // Pega o centexto do curso.
+            $context = context_course::instance($courseid);
+
+            $DB->delete_records('role_assignments', array('roleid' => $tutorinativorole,  'userid' => $data['userid'], 'contextid' => $context->id));
 
             if ($tutor->ttg_tipo_tutoria == "presencial") {
                 self::enrol_user_in_moodle_course($data['userid'], $courseid, $tutorpresencialrole);
